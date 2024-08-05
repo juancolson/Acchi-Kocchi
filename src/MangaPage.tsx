@@ -1,10 +1,11 @@
 import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { imageFrame, SOURCE, transitionFrame } from "./source";
+import { imageFrame, Meta, transitionFrame } from "./source";
 import { addAll } from "./utils";
+import React from "react";
 
 
 
-export const MangaPage = () => {
+export const MangaPage: React.FC<{SOURCE: Meta[]}> = ({ SOURCE}) => {
     return (
         <AbsoluteFill
             style={{
@@ -80,16 +81,18 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
 
     const scale = Math.min(scaleX, scaleY); // Choose the smaller scale factor to fit the parent
 
-
     return (
         <AbsoluteFill
             style={{
                 justifyContent: 'center',
+                minHeight: _height,
+                minWidth: _width,
                 alignItems: 'center',
                 flex: 1,
                 transform: `scale(${scale})`,
-                background: 'red'
+                border: '1px solid black',
             }}>
+                {/* <p>{_height} {_width} {scale.toFixed(2)} </p> */}
 
             <div
                 style={{
@@ -97,7 +100,6 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
                     height: _height, // Adjusted to  height
                     overflow: 'hidden',
                     position: 'relative',
-                    background: 'blue'
                 }}
             >
                 <img
