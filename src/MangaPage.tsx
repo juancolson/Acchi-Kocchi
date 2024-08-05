@@ -1,5 +1,5 @@
 import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { SOURCE } from "./source";
+import { imageFrame, SOURCE, transitionFrame } from "./source";
 import { addAll } from "./utils";
 
 
@@ -32,10 +32,10 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
     const time_array: number[] = []
     for (let i = 0; i < 2 * positions.length - 1; i++) {
         if (i % 2 == 0) {
-            time_array.push(5)
+            time_array.push(imageFrame)
         }
         else {
-            time_array.push(2)
+            time_array.push(transitionFrame)
         }
     }
     time_array.unshift(0)
