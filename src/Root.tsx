@@ -1,5 +1,7 @@
 import { Composition } from "remotion";
 import { MangaPage } from "./MangaPage";
+import { addAll } from "./utils";
+import { SOURCE } from "./source";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -7,7 +9,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="MyComp"
         component={MangaPage}
-        durationInFrames={450}
+        durationInFrames={addAll(SOURCE.map(i => i.duration))}
         fps={30}
         width={1280}
         height={720}
