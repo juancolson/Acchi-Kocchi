@@ -74,14 +74,19 @@ export const Manga: React.FC<{ source: string, positions: [number, number, numbe
         act_dur,
         height)
 
+    const scaleX = 1240 / _width;
+    const scaleY = 680 / _height;
+
+    const scale = Math.min(scaleX, scaleY); // Choose the smaller scale factor to fit the parent
+
+
     return (
         <AbsoluteFill
             style={{
                 justifyContent: 'center',
                 alignItems: 'center',
                 flex: 1,
-                transform: 'scale(3)',
-                transformOrigin: 'center',
+                transform: `scale(${scale})`,
             }}>
 
             <div
@@ -89,7 +94,7 @@ export const Manga: React.FC<{ source: string, positions: [number, number, numbe
                     width: _width,  // Adjusted to  width
                     height: _height, // Adjusted to  height
                     overflow: 'hidden',
-                    position: 'relative'
+                    position: 'relative',
                 }}
             >
                 <img
