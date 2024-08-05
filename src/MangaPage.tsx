@@ -22,7 +22,8 @@ export const MangaPage = () => {
     )
 }
 
-export const Manga: React.FC<{ source: string, positions: [number, number, number, number][], h: number, w: number }> = ({ source, positions, h, w }) => {
+
+const Manga: React.FC<{ source: string, positions: [number, number, number, number][], h: number, w: number }> = ({ source, positions, h, w }) => {
 
     const currentFrame = useCurrentFrame()
 
