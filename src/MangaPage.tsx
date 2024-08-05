@@ -88,6 +88,7 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
                 alignItems: 'center',
                 flex: 1,
                 transform: `scale(${scale})`,
+                background: 'red'
             }}>
 
             <div
@@ -96,6 +97,7 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
                     height: _height, // Adjusted to  height
                     overflow: 'hidden',
                     position: 'relative',
+                    background: 'blue'
                 }}
             >
                 <img
