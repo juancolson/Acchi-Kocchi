@@ -1,4 +1,4 @@
-import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { imageFrame, Meta, transitionFrame } from "./source";
 import { addAll } from "./utils";
 import React from "react";
@@ -14,7 +14,7 @@ export const MangaPage: React.FC<{SOURCE: Meta[]}> = ({ SOURCE}) => {
                 background: 'white'
             }}>
             {SOURCE.map((item, index) => {
-                return <Sequence from={addAll(SOURCE.map(i => i.duration).slice(0, index))} name={item.source} durationInFrames={item.duration} key={index}>
+                return <Sequence key={index} from={addAll(SOURCE.map(i => i.duration).slice(0, index))} name={item.source} durationInFrames={item.duration} >
                     <Manga source={item.source} positions={item.pos} w={item.width} h={item.height} />
                 </Sequence>
             })}
@@ -30,54 +30,54 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
 
     const { durationInFrames } = useVideoConfig()
 
-    const time_array: number[] = []
+    const timeArray: number[] = []
     for (let i = 0; i < 2 * positions.length - 1; i++) {
-        if (i % 2 == 0) {
-            time_array.push(imageFrame)
+        if (i % 2 === 0) {
+            timeArray.push(imageFrame)
         }
         else {
-            time_array.push(transitionFrame)
+            timeArray.push(transitionFrame)
         }
     }
-    time_array.unshift(0)
+    timeArray.unshift(0)
 
-    console.log(time_array);
+    console.log(timeArray);
 
 
-    const dur_arr = time_array.map((item) => {
-        return (durationInFrames / addAll(time_array)) * item
+    const durationArray = timeArray.map((item) => {
+        return (durationInFrames / addAll(timeArray)) * item
     })
 
-    const act_dur = dur_arr.map((item, index) => {
-        return addAll(dur_arr.slice(0, index + 1))
+    const actualDurationArray = durationArray.map((item, index) => {
+        return addAll(durationArray.slice(0, index + 1))
     })
 
 
     // X-Position Y-Position Width Height
-    const position_x = positions.map((item) => item[0]).flatMap(number => [number, number]);
-    const position_y = positions.map((item) => item[1]).flatMap(number => [number, number]);
+    const positionX = positions.map((item) => item[0]).flatMap(number => [number, number]);
+    const positionY = positions.map((item) => item[1]).flatMap(number => [number, number]);
     const width = positions.map((item) => item[2]).flatMap(number => [number, number]);
     const height = positions.map((item) => item[3]).flatMap(number => [number, number]);
 
 
-    let _position_x = interpolate(currentFrame,
-        act_dur,
-        position_x)
+    const movingPositionX = interpolate(currentFrame,
+        actualDurationArray,
+        positionX)
 
-    let _position_y = interpolate(currentFrame,
-        act_dur,
-        position_y)
+    const movingPositionY = interpolate(currentFrame,
+        actualDurationArray,
+        positionY)
 
-    let _width = interpolate(currentFrame,
-        act_dur,
+    const changingWidth = interpolate(currentFrame,
+        actualDurationArray,
         width)
 
-    let _height = interpolate(currentFrame,
-        act_dur,
+    const changingHeight = interpolate(currentFrame,
+        actualDurationArray,
         height)
 
-    const scaleX = 1240 / _width;
-    const scaleY = 680 / _height;
+    const scaleX = 1240 / changingWidth;
+    const scaleY = 680 / changingHeight;
 
     const scale = Math.min(scaleX, scaleY); // Choose the smaller scale factor to fit the parent
 
@@ -85,8 +85,8 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
         <AbsoluteFill
             style={{
                 justifyContent: 'center',
-                minHeight: _height,
-                minWidth: _width,
+                minHeight: changingHeight,
+                minWidth: changingWidth,
                 alignItems: 'center',
                 flex: 1,
                 transform: `scale(${scale})`,
@@ -96,17 +96,17 @@ const Manga: React.FC<{ source: string, positions: [number, number, number, numb
 
             <div
                 style={{
-                    width: _width,  // Adjusted to  width
-                    height: _height, // Adjusted to  height
+                    width: changingWidth,  // Adjusted to  width
+                    height: changingHeight, // Adjusted to  height
                     overflow: 'hidden',
                     position: 'relative',
                 }}
             >
-                <img
+                <Img
                     style={{
                         position: 'absolute',
-                        left: `-${_position_x}px`,    // Starting x position
-                        top: `-${_position_y}px`,    // Starting y position
+                        left: `-${movingPositionX}px`,    // Starting x position
+                        top: `-${movingPositionY}px`,    // Starting y position
                         width: `${w}px`,  // Original image width with 'px' units
                         height: `${h}px`, // Original image height with 'px' units
                         transformOrigin: 'top left'
